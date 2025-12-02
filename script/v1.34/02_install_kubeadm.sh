@@ -1,13 +1,4 @@
 #!/usr/bin/bash
-# port open for master
-systemctl enable firewalld --now
-firewall-cmd --permanent --add-port=6443/tcp
-firewall-cmd --permanent --add-port=2379-2380/tcp
-firewall-cmd --permanent --add-port=10250/tcp
-firewall-cmd --permanent --add-port=10259/tcp
-firewall-cmd --permanent --add-port=10257/tcp
-firewall-cmd --reload
-
 # swap off
 swapoff -a
 sed -i -E 's/^([[:space:]]*[^#][^[:space:]]+[[:space:]]+[^[:space:]]+[[:space:]]+swap([[:space:]]|$))/# \1/' /etc/fstab
@@ -43,9 +34,6 @@ EOF
 systemctl restart containerd
 
 # install kubectl
-setenforce 0
-sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
-
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
